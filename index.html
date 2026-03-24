@@ -1,1 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reds Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --surface2: #f5f5f7;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.12);
+  --text: #1d1d1f;
+  --muted: #86868b;
+  --muted2: #aeaeb2;
+  --red: #ff3b30;
+  --red-bg: #fff2f1;
+  --red-border: rgba(255,59,48,0.2);
+  --amber: #ff9500;
+  --amber-bg: #fff8ee;
+  --amber-border: rgba(255,149,0,0.2);
+  --green: #34c759;
+  --green-bg: #f0fdf4;
+  --green-border: rgba(52,199,89,0.2);
+  --blue: #007aff;
+  --blue-bg: #f0f5ff;
+  --blue-border: rgba(0,122,255,0.2);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem; -webkit-font-smoothing: antialiased; }
 
+.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+.header-left h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.4px; }
+.header-left p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+#last-updated { color: var(--blue); }
+
+.upload-zone { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-sm); padding: 10px 16px; cursor: pointer; transition: all 0.15s; }
+.upload-zone:hover, .upload-zone.drag { background: var(--blue-bg); border-color: var(--blue); }
+.upload-zone input { display: none; }
+.upload-icon { width: 28px; height: 28px; border-radius: 6px; background: var(--blue-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.upload-icon svg { width: 14px; height: 14px; stroke: var(--blue); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.upload-text p { font-size: 13px; font-weight: 500; }
+.upload-text span { font-size: 11px; color: var(--muted); }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 1.25rem; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+.stat-label { font-size: 11px; color: var(--muted); font-weight: 500; margin-bottom: 4px; }
+.stat-value { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; line-height: 1; }
+.stat-value.red { color: var(--red); }
+.stat-value.green { color: var(--green); }
+.stat-value.blue { color: var(--blue); }
+.stat-sub { font-size: 10px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+
+.controls { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
+.seg { display: flex; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 3px; gap: 2px; }
+.seg button { background: none; border: none; border-radius: 6px; padding: 6px 13px; font-size: 12px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: inherit; white-space: nowrap; }
+.seg button:hover { color: var(--text); }
+.seg button.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.divider { width: 1px; height: 28px; background: var(--border2); }
+.search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 240px; }
+.search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 13px; height: 13px; stroke: var(--muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+input[type="text"] { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 10px 7px 30px; color: var(--text); font-family: inherit; font-size: 13px; outline: none; transition: border-color 0.15s; }
+input[type="text"]:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,122,255,0.1); }
+input[type="text"]::placeholder { color: var(--muted2); }
+.time-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.time-wrap label { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.time-wrap select, input[type="time"] {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.15s;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type="time"]:focus, .time-wrap select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,122,255,0.1); }
+
+.legend { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; }
+.badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
+.badge-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.badge-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+.badge-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.badge-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+
+.table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th { padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.03em; border-bottom: 1px solid var(--border); background: var(--surface2); white-space: nowrap; }
+tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--surface2); }
+td { padding: 11px 16px; vertical-align: middle; }
+.agent-name { font-weight: 500; font-size: 13px; }
+.shift-text { font-size: 12px; color: var(--muted); }
+.reds-num { font-size: 13px; font-weight: 600; }
+.reds-num.high { color: var(--red); }
+.reds-num.mid { color: var(--amber); }
+.reds-num.low { color: var(--green); }
+.reds-num.none { color: var(--muted2); }
+.bar-wrap { width: 90px; height: 8px; background: #e5e5ea; border-radius: 999px; display: inline-block; vertical-align: middle; }
+.bar-fill { height: 8px; border-radius: 999px; transition: width 0.3s ease; }
+.group-row td { background: var(--surface2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 11px; font-weight: 500; color: var(--muted); padding: 7px 16px; letter-spacing: 0.02em; }
+.empty-state { text-align: center; padding: 3.5rem 2rem; color: var(--muted); }
+.empty-state .icon { font-size: 28px; margin-bottom: 10px; opacity: 0.3; }
+.empty-state p { font-size: 14px; }
+.empty-state span { color: var(--blue); }
+#schedule-drop-zone:hover, #schedule-drop-zone.drag { background: var(--green-bg); border-color: var(--green); }
+
+.vacation-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  margin-bottom: 10px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.vacation-bar-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.vacation-bar-label { font-size: 12px; font-weight: 500; color: var(--muted); white-space: nowrap; }
+.vacation-tags { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+.vacation-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #fff8ee; border: 1px solid rgba(255,149,0,0.25);
+  color: var(--amber); border-radius: 999px;
+  font-size: 11px; font-weight: 500; padding: 3px 10px 3px 10px;
+}
+.vacation-tag button {
+  background: none; border: none; cursor: pointer; color: var(--amber);
+  font-size: 13px; line-height: 1; padding: 0; display: flex; align-items: center;
+  opacity: 0.7; transition: opacity 0.15s;
+}
+.vacation-tag button:hover { opacity: 1; }
+.vacation-empty { font-size: 12px; color: var(--muted2); font-style: italic; }
+.btn-vacation {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 6px 12px;
+  font-family: inherit; font-size: 12px; font-weight: 500;
+  color: var(--muted); cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.btn-vacation:hover { border-color: var(--amber); color: var(--amber); background: #fff8ee; }
+.btn-vacation svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.3); z-index: 100;
+  align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 20px;
+  width: 360px; max-width: 95vw; max-height: 80vh;
+  display: flex; flex-direction: column; gap: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+.modal-header { display: flex; align-items: center; justify-content: space-between; }
+.modal-header h3 { font-size: 15px; font-weight: 600; }
+.modal-close { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 20px; line-height: 1; padding: 0; }
+.modal-close:hover { color: var(--text); }
+.modal-search-wrap { position: relative; }
+.modal-search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 13px; height: 13px; stroke: var(--muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.modal-search { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px 8px 30px; font-family: inherit; font-size: 13px; color: var(--text); outline: none; }
+.modal-search:focus { border-color: var(--blue); }
+.agent-list { overflow-y: auto; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.agent-list-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 10px; border-radius: var(--radius-sm);
+  cursor: pointer; transition: background 0.1s; user-select: none;
+}
+.agent-list-item:hover { background: var(--surface2); }
+.agent-list-item.on-vacation { background: #fff8ee; }
+.agent-list-name { font-size: 13px; font-weight: 500; }
+.agent-list-shift { font-size: 11px; color: var(--muted); }
+.toggle {
+  width: 36px; height: 20px; border-radius: 999px; border: none;
+  background: #e5e5ea; cursor: pointer; position: relative;
+  transition: background 0.2s; flex-shrink: 0;
+}
+.toggle::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: white; transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle.on { background: var(--amber); }
+.toggle.on::after { transform: translateX(16px); }
+.modal-footer { font-size: 11px; color: var(--muted); text-align: center; }
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Reds Dashboard</h1>
+    <p>Ian's team · <span id="last-updated">no data loaded</span></p>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <label class="upload-zone" id="drop-zone">
+      <input type="file" id="csv-input" accept=".csv">
+      <div class="upload-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-text">
+        <p>Upload reds CSV</p>
+        <span id="reds-upload-label">Drop or click to browse</span>
+      </div>
+    </label>
+    <label class="upload-zone" id="schedule-drop-zone" style="border-color:rgba(52,199,89,0.4);">
+      <input type="file" id="schedule-input" accept=".xlsx,.xls">
+      <div class="upload-icon" style="background:var(--green-bg);">
+        <svg viewBox="0 0 24 24" style="stroke:var(--green);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-text">
+        <p>Upload schedule XLSX</p>
+        <span id="schedule-upload-label" style="color:var(--green);">Using built-in schedule</span>
+      </div>
+    </label>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-label">Total reds</div><div class="stat-value red" id="stat-total">—</div><div class="stat-sub">across all agents</div></div>
+  <div class="stat"><div class="stat-label">Agents with reds</div><div class="stat-value" id="stat-agents">—</div><div class="stat-sub">on queue today</div></div>
+  <div class="stat"><div class="stat-label">No bandwidth</div><div class="stat-value red" id="stat-no-bw">—</div><div class="stat-sub" id="stat-no-bw-names"></div></div>
+  <div class="stat"><div class="stat-label">Has bandwidth</div><div class="stat-value green" id="stat-has-bw">—</div><div class="stat-sub">agents with free time</div></div>
+  <div class="stat"><div class="stat-label">Scheduled today</div><div class="stat-value" id="stat-scheduled">—</div><div class="stat-sub" id="stat-scheduled-day">agents working</div></div>
+  <div class="stat"><div class="stat-label">As of</div><div class="stat-value blue" id="stat-time" style="font-size:20px;">—</div><div class="stat-sub">current time</div></div>
+</div>
+
+<div class="controls">
+  <div class="seg" id="view-seg">
+    <button class="active" data-view="shift">By shift</button>
+    <button data-view="reds-asc">Reds ↑</button>
+    <button data-view="reds-desc">Reds ↓</button>
+    <button data-view="free">Free time</button>
+  </div>
+  <div class="divider"></div>
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="search" placeholder="Search agent…">
+  </div>
+  <div class="time-wrap">
+    <label>Day</label>
+    <select id="day-input">
+      <option value="0">Sunday</option>
+      <option value="1">Monday</option>
+      <option value="2">Tuesday</option>
+      <option value="3">Wednesday</option>
+      <option value="4">Thursday</option>
+      <option value="5">Friday</option>
+      <option value="6">Saturday</option>
+    </select>
+  </div>
+  <div class="time-wrap">
+    <label>Time</label>
+    <input type="time" id="time-input" value="14:00">
+  </div>
+</div>
+
+<div class="vacation-bar">
+  <div class="vacation-bar-left">
+    <span class="vacation-bar-label">On vacation</span>
+    <div class="vacation-tags" id="vacation-tags">
+      <span class="vacation-empty">No one on vacation</span>
+    </div>
+  </div>
+  <button class="btn-vacation" id="btn-manage-vacation">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Manage
+  </button>
+</div>
+
+<div class="legend">
+  <span class="badge badge-red">No bandwidth</span>
+  <span class="badge badge-amber">Limited</span>
+  <span class="badge badge-green">Has bandwidth</span>
+  <span class="badge badge-blue">Fully available</span>
+</div>
+
+<!-- Vacation modal -->
+<div class="modal-overlay" id="vacation-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Manage vacation</h3>
+      <button class="modal-close" id="modal-close">&times;</button>
+    </div>
+    <div class="modal-search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="modal-search" id="modal-search" placeholder="Search agent…">
+    </div>
+    <div class="agent-list" id="vacation-agent-list"></div>
+    <div class="modal-footer">Toggle on to mark as on vacation — they'll be excluded from the dashboard</div>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr>
+      <th>Agent</th><th>Shift</th><th>Reds</th><th>Reds time</th><th>Remaining shift</th><th>Free time left</th><th>Status</th>
+    </tr></thead>
+    <tbody id="table-body">
+      <tr><td colspan="7"><div class="empty-state"><div class="icon">↑</div><p>Upload a <span>reds CSV</span> to get started</p></div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+const SCHEDULE = {
+  'Amber Bailey':         { shift: '8:00 AM – 4:30 PM',  endH: 16, endM: 30, days: [1,2,3,4,5,6] },
+  'Bianca Vernando':      { shift: '6:00 AM – 2:30 PM',  endH: 14, endM: 30, days: [1,2,4,5,6] },
+  'Andre Cordero':        { shift: '9:00 AM – 5:30 PM',  endH: 17, endM: 30, days: [1,2,3,4,5] },
+  'Ariashe Lowery':       { shift: '9:00 AM – 5:30 PM',  endH: 17, endM: 30, days: [1,2,3,4,5] },
+  'Bo Repko':             { shift: '6:00 AM – 2:30 PM',  endH: 14, endM: 30, days: [2,3,4,5,6] },
+  'Chassidy Williams':    { shift: '6:00 AM – 2:30 PM',  endH: 14, endM: 30, days: [1,2,3,4,5] },
+  'Chisa Ordu':           { shift: '11:30 AM – 8:00 PM', endH: 20, endM: 0,  days: [1,2,3,4,5] },
+  'Cristie Avant':        { shift: '8:00 AM – 4:30 PM',  endH: 16, endM: 30, days: [1,2,3,4,5] },
+  'Damian Doubrava':      { shift: '8:00 AM – 4:30 PM',  endH: 16, endM: 30, days: [1,3,4,5,6] },
+  'Preston Panetti':      { shift: '8:00 AM – 4:30 PM',  endH: 16, endM: 30, days: [1,2,4,5,6] },
+  'Enrico Davis':         { shift: '11:30 AM – 8:00 PM', endH: 20, endM: 0,  days: [1,2,3,4,5] },
+  'Eri Dotson':           { shift: '8:00 AM – 4:30 PM',  endH: 16, endM: 30, days: [1,2,3,5,6] },
+  'Jeremy Carillo':       { shift: '11:30 AM – 8:00 PM', endH: 20, endM: 0,  days: [1,3,4,5,6] },
+  'Jessie Gregory':       { shift: '11:30 AM – 8:00 PM', endH: 20, endM: 0,  days: [1,2,3,4,5] },
+  'Katie Lacour':         { shift: '8:00 AM – 4:30 PM',  endH: 16, endM: 30, days: [1,2,3,4,5] },
+  'Michael Nguyen':       { shift: '6:00 AM – 2:30 PM',  endH: 14, endM: 30, days: [2,3,4,5,6] },
+  'Michael Scott Chavez': { shift: '6:00 AM – 2:30 PM',  endH: 14, endM: 30, days: [1,2,3,4,5] },
+  'Morgan Lankford':      { shift: '6:00 AM – 2:30 PM',  endH: 14, endM: 30, days: [1,3,4,5,6] },
+  'Rachel Dunlap':        { shift: '9:00 AM – 5:30 PM',  endH: 17, endM: 30, days: [1,2,3,4,5] },
+  'Sam De Castro':        { shift: '6:00 AM – 2:30 PM',  endH: 14, endM: 30, days: [1,2,3,4,5] },
+  'Sarah Al-Obaidi':      { shift: '8:00 AM – 4:30 PM',  endH: 16, endM: 30, days: [1,2,3,4,5] },
+  'Blanca Berumen':       { shift: '11:30 AM – 8:00 PM', endH: 20, endM: 0,  days: [1,2,4,5,6] },
+  'Sarah Hajiali':        { shift: '6:00 AM – 2:30 PM',  endH: 14, endM: 30, days: [2,3,4,5,6] },
+  'Taylor Amos':          { shift: '9:00 AM – 5:30 PM',  endH: 17, endM: 30, days: [1,2,3,4,5] },
+  'Unaisa Aslam':         { shift: '8:00 AM – 4:30 PM',  endH: 16, endM: 30, days: [1,2,3,5,6] },
+  'Lybah Nawaz':          { shift: '9:00 AM – 5:30 PM',  endH: 17, endM: 30, days: [1,2,3,4,5] },
+  'Jada Brown':           { shift: '9:00 AM – 5:30 PM',  endH: 17, endM: 30, days: [1,2,3,4,5] },
+  'Bicky P':              { shift: '11:30 AM – 8:00 PM', endH: 20, endM: 0,  days: [1,2,3,4,5] },
+  'Ramila Chaulagain':    { shift: '10:30 PM – 7:00 AM', endH: null, endM: null, days: [0,1,2,3,4] },
+};
+
+// ── VACATION STATE ──────────────────────────────────────────────────────────
+let vacationSet = new Set();
+
+function loadVacation() {
+  try {
+    const saved = localStorage.getItem('reds_vacation');
+    if (saved) vacationSet = new Set(JSON.parse(saved));
+  } catch(e) {}
+}
+
+function saveVacation() {
+  try { localStorage.setItem('reds_vacation', JSON.stringify([...vacationSet])); } catch(e) {}
+}
+
+function toggleVacation(name) {
+  if (vacationSet.has(name)) vacationSet.delete(name);
+  else vacationSet.add(name);
+  saveVacation();
+  renderVacationBar();
+  renderVacationList();
+  render();
+  updateScheduledStat();
+}
+
+function renderVacationBar() {
+  const container = document.getElementById('vacation-tags');
+  if (vacationSet.size === 0) {
+    container.innerHTML = '<span class="vacation-empty">No one on vacation</span>';
+    return;
+  }
+  container.innerHTML = [...vacationSet].map(name => `
+    <span class="vacation-tag">
+      ${name.split(' ')[0]}
+      <button onclick="toggleVacation('${name.replace(/'/g, "\\'")}')" title="Remove">&times;</button>
+    </span>`).join('');
+}
+
+let modalSearchQuery = '';
+function renderVacationList() {
+  const list = document.getElementById('vacation-agent-list');
+  if (!list) return;
+  const allAgents = Object.keys(SCHEDULE).sort();
+  const filtered = allAgents.filter(n => n.toLowerCase().includes(modalSearchQuery.toLowerCase()));
+  list.innerHTML = filtered.map(name => {
+    const onVac = vacationSet.has(name);
+    const shift = SCHEDULE[name] ? SCHEDULE[name].shift : '—';
+    return `<div class="agent-list-item ${onVac ? 'on-vacation' : ''}" onclick="toggleVacation('${name.replace(/'/g, "\\'")}')" >
+      <div><div class="agent-list-name">${name}</div><div class="agent-list-shift">${shift}</div></div>
+      <div class="toggle ${onVac ? 'on' : ''}"></div>
+    </div>`;
+  }).join('');
+}
+
+const ALIAS = {
+  'michael c': 'Michael Scott Chavez', 'michael n': 'Michael Nguyen',
+  'sam dc': 'Sam De Castro', 'sarah a': 'Sarah Al-Obaidi',
+  'sarah h.': 'Sarah Hajiali', 'bicky p': 'Bicky P',
+  'chisa o': 'Chisa Ordu', 'asia c.': null, 'asia': null, 'rosa': null,
+};
+
+function resolveAgent(csvName) {
+  const lower = csvName.trim().toLowerCase();
+  if (ALIAS.hasOwnProperty(lower)) return ALIAS[lower];
+  for (const key of Object.keys(SCHEDULE)) { if (key.toLowerCase() === lower) return key; }
+  for (const key of Object.keys(SCHEDULE)) { if (key.toLowerCase().startsWith(lower.split(' ')[0])) return key; }
+  return null;
+}
+
+let currentData = [], sortMode = 'shift', searchQuery = '';
+const GROUP_ORDER = ['2:30 PM','4:30 PM','5:30 PM','8:00 PM','Overnight'];
+
+function getGroup(endH, endM) {
+  if (endH === null) return 'Overnight';
+  if (endH === 14 && endM === 30) return '2:30 PM';
+  if (endH === 16 && endM === 30) return '4:30 PM';
+  if (endH === 17 && endM === 30) return '5:30 PM';
+  if (endH === 20) return '8:00 PM';
+  return 'Other';
+}
+
+function getNowMins() {
+  const [h, m] = document.getElementById('time-input').value.split(':').map(Number);
+  return h * 60 + m;
+}
+
+function fmtMins(mins) {
+  if (mins === null || mins === undefined) return '—';
+  if (mins <= 0) return '0 min';
+  if (mins < 60) return mins + ' min';
+  const h = Math.floor(mins / 60), m = mins % 60;
+  return m === 0 ? h + 'h' : h + 'h ' + m + 'm';
+}
+
+function getStatus(reds, freeMins, remainingMins, isOvernight) {
+  if (isOvernight) return { label: 'overnight', cls: 'badge-blue', bar: '#007aff', pct: 80 };
+  if (remainingMins <= 0) return { label: 'shift ended', cls: 'badge-blue', bar: '#aeaeb2', pct: 0 };
+  if (reds === 0) return { label: 'fully available', cls: 'badge-blue', bar: '#007aff', pct: 100 };
+  if (freeMins <= 0) return { label: 'no bandwidth', cls: 'badge-red', bar: '#ff3b30', pct: 0 };
+  const pct = remainingMins > 0 ? Math.round(freeMins / remainingMins * 100) : 0;
+  if (pct >= 60) return { label: fmtMins(freeMins) + ' free', cls: 'badge-green', bar: '#34c759', pct };
+  if (pct >= 25) return { label: fmtMins(freeMins) + ' free', cls: 'badge-amber', bar: '#ff9500', pct };
+  return { label: fmtMins(freeMins) + ' free', cls: 'badge-red', bar: '#ff3b30', pct };
+}
+
+function redsClass(n) {
+  if (n === 0) return 'none';
+  if (n <= 6) return 'low';
+  if (n <= 24) return 'mid';
+  return 'high';
+}
+
+function getSelectedDay() {
+  return parseInt(document.getElementById('day-input').value);
+}
+
+function getScheduledToday() {
+  const day = getSelectedDay();
+  return Object.entries(SCHEDULE).filter(([name, s]) => s && s.days && s.days.includes(day) && !vacationSet.has(name)).length;
+}
+
+function computeRows() {
+  const nowMins = getNowMins();
+  const day = getSelectedDay();
+  const todayData = currentData.filter(d => SCHEDULE[d.scheduleName] && SCHEDULE[d.scheduleName].days && SCHEDULE[d.scheduleName].days.includes(day) && !vacationSet.has(d.scheduleName));
+  return todayData.map(d => {
+    const s = SCHEDULE[d.scheduleName];
+    const isOvernight = s.endH === null;
+    const remainingMins = isOvernight ? null : Math.max(0, s.endH * 60 + s.endM - nowMins);
+    const minsNeeded = d.reds * 5;
+    const freeMins = isOvernight ? null : Math.max(0, remainingMins - minsNeeded);
+    const group = getGroup(s.endH, s.endM);
+    const st = getStatus(d.reds, freeMins, remainingMins, isOvernight);
+    return { ...d, shift: s.shift, remainingMins, minsNeeded, freeMins, group, st, isOvernight };
+  });
+}
+
+function render() {
+  let rows = computeRows();
+  if (searchQuery) rows = rows.filter(r => r.scheduleName.toLowerCase().includes(searchQuery.toLowerCase()));
+
+  if (sortMode === 'shift') {
+    rows.sort((a, b) => {
+      const gi = r => GROUP_ORDER.indexOf(r.group);
+      return gi(a) !== gi(b) ? gi(a) - gi(b) : b.reds - a.reds;
+    });
+  } else if (sortMode === 'reds-asc') rows.sort((a, b) => a.reds - b.reds);
+  else if (sortMode === 'reds-desc') rows.sort((a, b) => b.reds - a.reds);
+  else if (sortMode === 'free') rows.sort((a, b) => (b.freeMins ?? 9999) - (a.freeMins ?? 9999));
+
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">⊘</div><p>No agents match.</p></div></td></tr>`;
+    return;
+  }
+
+  let lastGroup = null;
+  rows.forEach(r => {
+    if (sortMode === 'shift' && r.group !== lastGroup) {
+      lastGroup = r.group;
+      const gr = document.createElement('tr');
+      gr.className = 'group-row';
+      const groupCount = rows.filter(x => x.group === r.group).length;
+      const countLabel = `${groupCount} agent${groupCount !== 1 ? 's' : ''}`;
+      const shiftLabel = r.isOvernight
+        ? `Overnight · 10:30 PM – 7:00 AM · ${countLabel}`
+        : `Ends ${r.group} · ${r.remainingMins <= 0 ? 'shift ended' : fmtMins(r.remainingMins) + ' remaining'} · ${countLabel}`;
+      gr.innerHTML = `<td colspan="7">${shiftLabel}</td>`;
+      tbody.appendChild(gr);
+    }
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><div class="agent-name">${r.scheduleName}</div></td>
+      <td><div class="shift-text">${r.shift}</div></td>
+      <td><span class="reds-num ${redsClass(r.reds)}">${r.reds === 0 ? '—' : r.reds}</span></td>
+      <td><span class="shift-text">${fmtMins(r.minsNeeded)}</span></td>
+      <td><span class="shift-text">${r.isOvernight ? '—' : fmtMins(r.remainingMins)}</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px;"><div class="bar-wrap"><div class="bar-fill" style="width:${r.st.pct}%;background:${r.st.bar};"></div></div></div></td>
+      <td><span class="badge ${r.st.cls}">${r.st.label}</span></td>`;
+    tbody.appendChild(tr);
+  });
+
+  const all = computeRows();
+  const total = all.reduce((s, r) => s + r.reds, 0);
+  const noBw = all.filter(r => !r.isOvernight && r.freeMins !== null && r.freeMins <= 0 && r.reds > 0 && r.remainingMins > 0);
+  const scheduledCount = getScheduledToday();
+  const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  document.getElementById('stat-scheduled').textContent = scheduledCount;
+  document.getElementById('stat-scheduled-day').textContent = dayNames[getSelectedDay()];
+  document.getElementById('stat-total').textContent = total || '—';
+  document.getElementById('stat-agents').textContent = all.filter(r => r.reds > 0).length || '—';
+  document.getElementById('stat-no-bw').textContent = noBw.length || '—';
+  document.getElementById('stat-no-bw-names').textContent = noBw.map(r => r.scheduleName.split(' ')[0]).join(', ');
+  document.getElementById('stat-has-bw').textContent = all.filter(r => r.freeMins !== null && r.freeMins > 60).length || '—';
+  const [hh, mm] = document.getElementById('time-input').value.split(':');
+  const h = parseInt(hh);
+  document.getElementById('stat-time').textContent = `${h > 12 ? h - 12 : h || 12}:${mm} ${h >= 12 ? 'PM' : 'AM'}`;
+}
+
+// Day name -> JS day index
+const DAY_MAP = { sunday:0, monday:1, tuesday:2, wednesday:3, thursday:4, friday:5, saturday:6 };
+
+function applySchedule(newSchedule) {
+  Object.keys(SCHEDULE).forEach(k => delete SCHEDULE[k]);
+  Object.assign(SCHEDULE, newSchedule);
+}
+
+function parseScheduleXLSX(arrayBuffer) {
+  const wb = XLSX.read(arrayBuffer, { type: 'array' });
+  const ws = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval: null });
+
+  const newSchedule = {};
+  rows.forEach(row => {
+    const name = row['Agent Name'] || row['agent name'] || row['Name'];
+    if (!name || typeof name !== 'string' || name.trim() === '' || name.toLowerCase().includes('supervisor')) return;
+
+    // parse shift times
+    const startRaw = row['Shift Start'];
+    const endRaw = row['Shift End'];
+    let endH = null, endM = null, shiftStr = '';
+
+    function parseTime(val) {
+      if (!val) return null;
+      if (typeof val === 'number') {
+        // Excel serial time fraction
+        const totalMins = Math.round(val * 24 * 60);
+        return { h: Math.floor(totalMins / 60) % 24, m: totalMins % 60 };
+      }
+      const s = String(val).trim();
+      const m = s.match(/(\d+):(\d+):(\d+)/);
+      if (m) return { h: parseInt(m[1]), m: parseInt(m[2]) };
+      return null;
+    }
+
+    const startT = parseTime(startRaw);
+    const endT = parseTime(endRaw);
+
+    if (startT && endT) {
+      const fmt = t => {
+        const h12 = t.h % 12 || 12;
+        const ampm = t.h < 12 ? 'AM' : 'PM';
+        return `${h12}:${String(t.m).padStart(2,'0')} ${ampm}`;
+      };
+      shiftStr = `${fmt(startT)} – ${fmt(endT)}`;
+      // overnight: end time < start time
+      if (endT.h < startT.h || (endT.h === startT.h && endT.m < startT.m)) {
+        endH = null; endM = null; // treat as overnight
+      } else {
+        endH = endT.h; endM = endT.m;
+      }
+    }
+
+    // parse working days
+    const dayColumns = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const days = [];
+    dayColumns.forEach((col, idx) => {
+      const val = row[col];
+      if (val && String(val).trim().toUpperCase() === 'X') days.push(idx);
+    });
+
+    // deduplicate — keep first occurrence per name
+    const cleanName = name.trim();
+    if (!newSchedule[cleanName]) {
+      newSchedule[cleanName] = { shift: shiftStr || '—', endH, endM, days };
+    }
+  });
+
+  if (Object.keys(newSchedule).length === 0) {
+    alert('Could not parse schedule — make sure the XLSX has Agent Name, Shift Start, Shift End, and day columns.');
+    return;
+  }
+
+  // Persist to localStorage so it survives page refreshes
+  try {
+    localStorage.setItem('reds_schedule', JSON.stringify(newSchedule));
+    localStorage.setItem('reds_schedule_date', new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
+  } catch(e) {}
+
+  applySchedule(newSchedule);
+  document.getElementById('schedule-upload-label').textContent = `✓ ${Object.keys(newSchedule).length} agents loaded`;
+  document.getElementById('schedule-upload-label').style.color = 'var(--green)';
+
+  if (currentData.length > 0) render();
+  else updateScheduledStat();
+}
+
+function updateScheduledStat() {
+  const scheduledCount = getScheduledToday();
+  const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  document.getElementById('stat-scheduled').textContent = scheduledCount;
+  document.getElementById('stat-scheduled-day').textContent = dayNames[getSelectedDay()];
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+  const idx = headers.findIndex(h => h.toLowerCase().includes('assignee'));
+  if (idx === -1) { alert('Could not find "Assignee" column.'); return; }
+  const counts = {};
+  for (let i = 1; i < lines.length; i++) {
+    const name = lines[i].split(',')[idx]?.trim().replace(/"/g, '');
+    if (name) counts[name] = (counts[name] || 0) + 1;
+  }
+  const data = [];
+  for (const [csvName, reds] of Object.entries(counts)) {
+    const sn = resolveAgent(csvName);
+    if (sn && SCHEDULE[sn]) data.push({ csvName, scheduleName: sn, reds });
+  }
+  for (const key of Object.keys(SCHEDULE)) {
+    if (SCHEDULE[key] && !data.find(d => d.scheduleName === key)) data.push({ csvName: key, scheduleName: key, reds: 0 });
+  }
+  currentData = data;
+  const now = new Date();
+  document.getElementById('last-updated').textContent = `updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  render();
+}
+
+document.getElementById('csv-input').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader(); r.onload = ev => parseCSV(ev.target.result); r.readAsText(f);
+});
+const dz = document.getElementById('drop-zone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('drag');
+  const f = e.dataTransfer.files[0]; if (!f) return;
+  const r = new FileReader(); r.onload = ev => parseCSV(ev.target.result); r.readAsText(f);
+});
+document.getElementById('view-seg').querySelectorAll('button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('view-seg').querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); sortMode = btn.dataset.view; render();
+  });
+});
+document.getElementById('search').addEventListener('input', e => { searchQuery = e.target.value; render(); });
+document.getElementById('time-input').addEventListener('change', () => render());
+document.getElementById('day-input').addEventListener('change', () => { render(); updateScheduledStat(); });
+
+// Schedule XLSX upload
+function handleScheduleFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => parseScheduleXLSX(ev.target.result);
+  reader.readAsArrayBuffer(file);
+}
+document.getElementById('schedule-input').addEventListener('change', e => handleScheduleFile(e.target.files[0]));
+
+// Vacation modal
+document.getElementById('btn-manage-vacation').addEventListener('click', () => {
+  renderVacationList();
+  document.getElementById('vacation-modal').classList.add('open');
+});
+document.getElementById('modal-close').addEventListener('click', () => {
+  document.getElementById('vacation-modal').classList.remove('open');
+  document.getElementById('modal-search').value = '';
+  modalSearchQuery = '';
+});
+document.getElementById('vacation-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('vacation-modal')) {
+    document.getElementById('vacation-modal').classList.remove('open');
+    document.getElementById('modal-search').value = '';
+    modalSearchQuery = '';
+  }
+});
+document.getElementById('modal-search').addEventListener('input', e => {
+  modalSearchQuery = e.target.value;
+  renderVacationList();
+});
+const sdz = document.getElementById('schedule-drop-zone');
+sdz.addEventListener('dragover', e => { e.preventDefault(); sdz.classList.add('drag'); });
+sdz.addEventListener('dragleave', () => sdz.classList.remove('drag'));
+sdz.addEventListener('drop', e => { e.preventDefault(); sdz.classList.remove('drag'); handleScheduleFile(e.dataTransfer.files[0]); });
+
+const now = new Date();
+document.getElementById('time-input').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+document.getElementById('day-input').value = now.getDay();
+const h = now.getHours();
+document.getElementById('stat-time').textContent = `${h > 12 ? h-12 : h||12}:${String(now.getMinutes()).padStart(2,'0')} ${h >= 12 ? 'PM' : 'AM'}`;
+
+// Load saved schedule from localStorage if available
+try {
+  const saved = localStorage.getItem('reds_schedule');
+  const savedDate = localStorage.getItem('reds_schedule_date');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    applySchedule(parsed);
+    const count = Object.keys(parsed).length;
+    document.getElementById('schedule-upload-label').textContent = `✓ ${count} agents · saved ${savedDate}`;
+    document.getElementById('schedule-upload-label').style.color = 'var(--green)';
+  }
+} catch(e) {}
+
+updateScheduledStat();
+loadVacation();
+renderVacationBar();
+</script>
+</body>
+</html>
