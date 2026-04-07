@@ -200,6 +200,133 @@ td { padding: 11px 16px; vertical-align: middle; }
 .toggle.on::after { transform: translateX(16px); }
 .modal-footer { font-size: 11px; color: var(--muted); text-align: center; }
 
+
+.flag-bar {
+  background: #fff8ee;
+  border: 1px solid rgba(255,149,0,0.3);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  margin-bottom: 10px;
+  display: none;
+}
+.flag-bar.visible { display: block; }
+.flag-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.flag-title { font-size: 12px; font-weight: 600; color: var(--amber); display: flex; align-items: center; gap: 6px; }
+.flag-title svg { width: 13px; height: 13px; stroke: var(--amber); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.flag-subtitle { font-size: 11px; color: var(--muted); }
+.flag-names { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.flag-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: white; border: 1px solid rgba(255,149,0,0.3);
+  border-radius: var(--radius-sm); padding: 4px 10px;
+  font-size: 12px; font-weight: 500; color: var(--text);
+  cursor: pointer; transition: border-color 0.15s;
+}
+.flag-chip:hover { border-color: var(--amber); }
+.flag-chip .chip-badge { font-size: 10px; background: var(--amber-bg); color: var(--amber); border-radius: 999px; padding: 1px 6px; font-weight: 600; }
+.flag-chip .chip-arrow { font-size: 11px; color: var(--muted2); }
+
+/* Link modal */
+.link-modal {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 20px;
+  width: 380px; max-width: 95vw;
+  display: flex; flex-direction: column; gap: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+.link-modal h3 { font-size: 15px; font-weight: 600; }
+.link-csv-name { font-size: 13px; color: var(--muted); margin-top: -8px; }
+.link-csv-name span { font-weight: 600; color: var(--amber); }
+.link-agent-list { display: flex; flex-direction: column; gap: 2px; max-height: 280px; overflow-y: auto; }
+.link-agent-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 10px; border-radius: var(--radius-sm);
+  cursor: pointer; transition: background 0.1s; font-size: 13px;
+}
+.link-agent-item:hover { background: var(--surface2); }
+.link-agent-item .agent-shift-small { font-size: 11px; color: var(--muted); }
+.link-actions { display: flex; gap: 8px; }
+.btn-ignore {
+  flex: 1; background: none; border: 1px solid var(--border2); border-radius: var(--radius-sm);
+  padding: 8px; font-family: inherit; font-size: 12px; font-weight: 500;
+  color: var(--muted); cursor: pointer; transition: all 0.15s;
+}
+.btn-ignore:hover { border-color: var(--red); color: var(--red); }
+
+
+/* ── CHAT COVERAGE ─────────────────────────────────────────────── */
+.hour-cell {
+  width: 52px; min-width: 52px; padding: 8px 4px;
+  text-align: center; border-left: 1px solid var(--border);
+  cursor: pointer; transition: background 0.1s; position: relative;
+}
+.hour-cell.covered { background: var(--green-bg); }
+.hour-cell.covered-outside { background: #f5f5f7; cursor: default; }
+.hour-cell.uncovered { background: white; }
+.hour-dot { width: 8px; height: 8px; border-radius: 50%; margin: 0 auto; background: #e5e5ea; }
+.hour-dot.on { background: var(--green); }
+.hour-dot.off { background: #e5e5ea; }
+
+.coverage-cell {
+  padding: 8px 4px; text-align: center; border-left: 1px solid var(--border);
+  font-size: 11px; font-weight: 600;
+}
+.coverage-cell.good { color: var(--green); background: var(--green-bg); }
+.coverage-cell.low { color: var(--red); background: var(--red-bg); }
+.coverage-cell.empty { color: var(--muted2); }
+.coverage-label { padding: 8px 14px; font-size: 11px; font-weight: 600; color: var(--muted); }
+
+.hour-toggle-btn {
+  padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  background: var(--surface); font-family: inherit; font-size: 11px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; color: var(--muted); white-space: nowrap;
+}
+.hour-toggle-btn.active { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+.hour-toggle-btn.outside { background: var(--surface2); color: var(--muted2); border-style: dashed; cursor: not-allowed; opacity: 0.5; }
+
+.chat-agent-row td { border-bottom: 1px solid var(--border); }
+.chat-agent-row:last-child td { border-bottom: none; }
+.chat-agent-row:hover td { background: var(--surface2); }
+.remove-chat-btn { background: none; border: none; cursor: pointer; color: var(--muted2); font-size: 16px; padding: 0 4px; line-height: 1; transition: color 0.15s; }
+.remove-chat-btn:hover { color: var(--red); }
+
+
+/* ── TIME SLOT PICKER ──────────────────────────────────────────── */
+.slot-btn {
+  padding: 7px 12px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--surface);
+  font-family: inherit; font-size: 12px; font-weight: 500;
+  color: var(--text); cursor: pointer; transition: all 0.15s;
+  min-width: 54px; text-align: center;
+}
+.slot-btn:hover { border-color: var(--blue); color: var(--blue); }
+.slot-btn.selected { background: var(--blue); border-color: var(--blue); color: white; }
+.slot-btn .slot-count { display: block; font-size: 10px; font-weight: 400; margin-top: 1px; }
+.slot-btn.good .slot-count { color: var(--green); }
+.slot-btn.low .slot-count { color: var(--red); }
+.slot-btn.selected .slot-count { color: rgba(255,255,255,0.75); }
+
+/* ── AVAILABILITY CARDS ─────────────────────────────────────────── */
+.avail-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+.avail-card:hover { background: var(--surface2); }
+.avail-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.avail-dot.on-chat { background: var(--blue); }
+.avail-dot.has-bw { background: var(--green); }
+.avail-dot.low-bw { background: var(--amber); }
+.avail-dot.no-bw { background: var(--red); }
+.avail-dot.off-shift { background: var(--muted2); }
+.avail-name { font-size: 13px; font-weight: 500; flex: 1; }
+.avail-badge { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+.avail-badge.on-chat { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+.avail-badge.has-bw { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.avail-badge.low-bw { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+.avail-badge.no-bw { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.avail-badge.off-shift { background: var(--surface2); color: var(--muted2); border: 1px solid var(--border); }
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -273,6 +400,22 @@ td { padding: 11px 16px; vertical-align: middle; }
   </div>
 </div>
 
+<div class="flag-bar" id="flag-bar">
+  <div class="flag-header" id="flag-toggle-header" onclick="toggleFlagBar()" style="cursor:pointer;user-select:none;">
+    <div class="flag-title">
+      <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Unmatched names in CSV
+      <span id="flag-count-badge" style="font-size:10px;background:var(--amber);color:white;border-radius:999px;padding:1px 7px;font-weight:600;margin-left:4px;"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span id="flag-minimized-hint" style="font-size:11px;color:var(--muted);display:none;">click to expand</span>
+      <span class="flag-subtitle" id="flag-subtitle-text">Click a name to link it to a schedule agent</span>
+      <svg id="flag-chevron" viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.2s;flex-shrink:0;"><polyline points="18 15 12 9 6 15"/></svg>
+    </div>
+  </div>
+  <div class="flag-names" id="flag-names" style="transition:all 0.2s;"></div>
+</div>
+
 <div class="vacation-bar">
   <div class="vacation-bar-left">
     <span class="vacation-bar-label">On vacation</span>
@@ -291,6 +434,25 @@ td { padding: 11px 16px; vertical-align: middle; }
   <span class="badge badge-amber">Limited</span>
   <span class="badge badge-green">Has bandwidth</span>
   <span class="badge badge-blue">Fully available</span>
+</div>
+
+<!-- Link modal -->
+<div class="modal-overlay" id="link-modal">
+  <div class="link-modal">
+    <div class="modal-header">
+      <h3>Link name to agent</h3>
+      <button class="modal-close" id="link-modal-close">&times;</button>
+    </div>
+    <p class="link-csv-name">CSV name: <span id="link-csv-display"></span></p>
+    <div class="modal-search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="modal-search" id="link-search" placeholder="Search schedule agent…">
+    </div>
+    <div class="link-agent-list" id="link-agent-list"></div>
+    <div class="link-actions">
+      <button class="btn-ignore" id="btn-ignore-name">Ignore this name</button>
+    </div>
+  </div>
 </div>
 
 <!-- Vacation modal -->
@@ -318,6 +480,86 @@ td { padding: 11px 16px; vertical-align: middle; }
       <tr><td colspan="7"><div class="empty-state"><div class="icon">↑</div><p>Upload a <span>reds CSV</span> to get started</p></div></td></tr>
     </tbody>
   </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ CHAT SECTION -->
+<div style="margin-top:2rem;">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px;">
+    <div>
+      <h2 style="font-size:18px;font-weight:600;letter-spacing:-0.3px;">Chat coverage</h2>
+      <p style="font-size:13px;color:var(--muted);margin-top:2px;">8:00 AM – 8:00 PM · minimum 4 agents per hour</p>
+    </div>
+    <button class="btn-vacation" id="btn-assign-chat" style="border-color:var(--blue);color:var(--blue);">
+      <svg viewBox="0 0 24 24" style="stroke:var(--blue);"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Assign agents
+    </button>
+  </div>
+
+  <!-- Hour slot picker -->
+  <div style="margin-bottom:1rem;">
+    <p style="font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Select a time slot to see availability</p>
+    <div id="hour-slot-picker" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+  </div>
+
+  <!-- Availability panel (shown when hour selected) -->
+  <div id="availability-panel" style="display:none;margin-bottom:1rem;">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface2);">
+        <div>
+          <span style="font-size:14px;font-weight:600;" id="avail-hour-label"></span>
+          <span style="font-size:12px;color:var(--muted);margin-left:8px;" id="avail-summary"></span>
+        </div>
+        <button onclick="clearHourSelection()" style="background:none;border:none;cursor:pointer;color:var(--muted2);font-size:18px;line-height:1;padding:0;">&times;</button>
+      </div>
+      <div id="availability-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0;"></div>
+    </div>
+  </div>
+
+  <!-- Coverage grid -->
+  <div class="table-wrap" style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:12px;min-width:700px;">
+      <thead>
+        <tr>
+          <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0.03em;border-bottom:1px solid var(--border);background:var(--surface2);white-space:nowrap;width:140px;">Agent</th>
+          <th id="chat-shift-header" style="padding:10px 14px;text-align:left;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0.03em;border-bottom:1px solid var(--border);background:var(--surface2);white-space:nowrap;">Shift</th>
+          <th colspan="12" style="padding:10px 14px;text-align:center;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0.03em;border-bottom:1px solid var(--border);background:var(--surface2);">Hours (8 AM – 8 PM)</th>
+        </tr>
+        <tr id="chat-hour-headers" style="background:var(--surface2);border-bottom:1px solid var(--border);">
+          <td style="padding:6px 14px;font-size:10px;color:var(--muted);font-weight:500;"></td>
+          <td style="padding:6px 14px;font-size:10px;color:var(--muted);font-weight:500;"></td>
+        </tr>
+      </thead>
+      <tbody id="chat-table-body"></tbody>
+      <tfoot>
+        <tr id="chat-coverage-row" style="border-top:1px solid var(--border);background:var(--surface2);"></tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- Assign chat modal -->
+<div class="modal-overlay" id="chat-modal">
+  <div class="modal" style="width:420px;max-height:85vh;">
+    <div class="modal-header">
+      <h3>Assign agents to chat</h3>
+      <button class="modal-close" id="chat-modal-close">&times;</button>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Select an agent, then toggle which hours they cover chat.</p>
+    <div class="modal-search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="modal-search" id="chat-agent-search" placeholder="Search agent…">
+    </div>
+    <div class="agent-list" id="chat-agent-list" style="max-height:200px;"></div>
+    <div id="chat-hours-panel" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <p style="font-size:13px;font-weight:500;" id="chat-selected-name"></p>
+        <button id="btn-clear-agent-chat" style="font-size:11px;color:var(--red);background:none;border:none;cursor:pointer;font-family:inherit;">Clear hours</button>
+      </div>
+      <div id="chat-hour-toggles" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+    </div>
+    <button id="btn-done-chat" style="background:var(--blue);color:white;border:none;border-radius:var(--radius-sm);padding:9px 16px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;width:100%;margin-top:4px;">Done</button>
+  </div>
 </div>
 
 <script>
@@ -406,10 +648,112 @@ function renderVacationList() {
   }).join('');
 }
 
+// ── NAME LINKING ─────────────────────────────────────────────────────────────
+let unmatchedNames = {};   // { csvName: reds }
+let ignoredNames = new Set();
+let currentLinkTarget = null;
+
+function loadNameLinks() {
+  try {
+    const saved = localStorage.getItem('reds_name_links');
+    if (saved) {
+      const links = JSON.parse(saved);
+      Object.assign(ALIAS, links);
+    }
+    const ignored = localStorage.getItem('reds_ignored_names');
+    if (ignored) ignoredNames = new Set(JSON.parse(ignored));
+  } catch(e) {}
+}
+
+function saveNameLinks() {
+  try { localStorage.setItem('reds_name_links', JSON.stringify(ALIAS)); } catch(e) {}
+}
+
+function saveIgnoredNames() {
+  try { localStorage.setItem('reds_ignored_names', JSON.stringify([...ignoredNames])); } catch(e) {}
+}
+
+let flagBarMinimized = false;
+
+function toggleFlagBar() {
+  flagBarMinimized = !flagBarMinimized;
+  const names = document.getElementById('flag-names');
+  const chevron = document.getElementById('flag-chevron');
+  const hint = document.getElementById('flag-minimized-hint');
+  const subtitle = document.getElementById('flag-subtitle-text');
+  if (flagBarMinimized) {
+    names.style.display = 'none';
+    chevron.style.transform = 'rotate(180deg)';
+    hint.style.display = 'inline';
+    subtitle.style.display = 'none';
+  } else {
+    names.style.display = 'flex';
+    chevron.style.transform = 'rotate(0deg)';
+    hint.style.display = 'none';
+    subtitle.style.display = 'inline';
+  }
+}
+
+function renderFlagBar() {
+  const bar = document.getElementById('flag-bar');
+  const container = document.getElementById('flag-names');
+  const badge = document.getElementById('flag-count-badge');
+  const visible = Object.keys(unmatchedNames).filter(n => !ignoredNames.has(n));
+  if (visible.length === 0) { bar.classList.remove('visible'); return; }
+  bar.classList.add('visible');
+  badge.textContent = visible.length;
+  container.innerHTML = visible.map(name => `
+    <div class="flag-chip" onclick="openLinkModal('${name.replace(/'/g, "\\'")}')">
+      <span>${name}</span>
+      <span class="chip-badge">${unmatchedNames[name]}</span>
+      <span class="chip-arrow">→ link</span>
+    </div>`).join('');
+  // keep current minimized state
+  if (flagBarMinimized) {
+    container.style.display = 'none';
+  }
+}
+
+function openLinkModal(csvName) {
+  currentLinkTarget = csvName;
+  document.getElementById('link-csv-display').textContent = csvName;
+  document.getElementById('link-search').value = '';
+  renderLinkAgentList('');
+  document.getElementById('link-modal').classList.add('open');
+}
+
+function renderLinkAgentList(query) {
+  const list = document.getElementById('link-agent-list');
+  const agents = Object.keys(SCHEDULE).filter(n => n.toLowerCase().includes(query.toLowerCase())).sort();
+  list.innerHTML = agents.map(name => `
+    <div class="link-agent-item" onclick="confirmLink('${name.replace(/'/g, "\\'")}')">
+      <div>
+        <div style="font-weight:500;">${name}</div>
+        <div class="agent-shift-small">${SCHEDULE[name] ? SCHEDULE[name].shift : ''}</div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aeaeb2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>`).join('');
+}
+
+function confirmLink(scheduleName) {
+  if (!currentLinkTarget) return;
+  ALIAS[currentLinkTarget.toLowerCase()] = scheduleName;
+  saveNameLinks();
+  // Remove from unmatched and re-run CSV parse with updated alias
+  delete unmatchedNames[currentLinkTarget];
+  document.getElementById('link-modal').classList.remove('open');
+  // Re-process currentData to apply new link
+  if (lastCSVText) parseCSV(lastCSVText);
+  renderFlagBar();
+}
+
+let lastCSVText = '';
+
 const ALIAS = {
   'michael c': 'Michael Scott Chavez', 'michael n': 'Michael Nguyen',
   'sam dc': 'Sam De Castro', 'sarah a': 'Sarah Al-Obaidi',
   'sarah h.': 'Sarah Hajiali', 'bicky p': 'Bicky P',
+  'balrupe purewal': 'Bicky P', 'balrupe': 'Bicky P',
   'chisa o': 'Chisa Ordu', 'asia c.': null, 'asia': null, 'rosa': null,
 };
 
@@ -649,6 +993,7 @@ function updateScheduledStat() {
 }
 
 function parseCSV(text) {
+  lastCSVText = text;
   const lines = text.trim().split('\n');
   const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
   const idx = headers.findIndex(h => h.toLowerCase().includes('assignee'));
@@ -659,14 +1004,20 @@ function parseCSV(text) {
     if (name) counts[name] = (counts[name] || 0) + 1;
   }
   const data = [];
+  unmatchedNames = {};
   for (const [csvName, reds] of Object.entries(counts)) {
     const sn = resolveAgent(csvName);
-    if (sn && SCHEDULE[sn]) data.push({ csvName, scheduleName: sn, reds });
+    if (sn && SCHEDULE[sn]) {
+      data.push({ csvName, scheduleName: sn, reds });
+    } else if (!ignoredNames.has(csvName)) {
+      unmatchedNames[csvName] = reds;
+    }
   }
   for (const key of Object.keys(SCHEDULE)) {
     if (SCHEDULE[key] && !data.find(d => d.scheduleName === key)) data.push({ csvName: key, scheduleName: key, reds: 0 });
   }
   currentData = data;
+  renderFlagBar();
   const now = new Date();
   document.getElementById('last-updated').textContent = `updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
   render();
@@ -703,6 +1054,30 @@ function handleScheduleFile(file) {
 }
 document.getElementById('schedule-input').addEventListener('change', e => handleScheduleFile(e.target.files[0]));
 
+// Link modal
+document.getElementById('link-modal-close').addEventListener('click', () => {
+  document.getElementById('link-modal').classList.remove('open');
+  currentLinkTarget = null;
+});
+document.getElementById('link-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('link-modal')) {
+    document.getElementById('link-modal').classList.remove('open');
+    currentLinkTarget = null;
+  }
+});
+document.getElementById('link-search').addEventListener('input', e => {
+  renderLinkAgentList(e.target.value);
+});
+document.getElementById('btn-ignore-name').addEventListener('click', () => {
+  if (!currentLinkTarget) return;
+  ignoredNames.add(currentLinkTarget);
+  saveIgnoredNames();
+  delete unmatchedNames[currentLinkTarget];
+  document.getElementById('link-modal').classList.remove('open');
+  currentLinkTarget = null;
+  renderFlagBar();
+});
+
 // Vacation modal
 document.getElementById('btn-manage-vacation').addEventListener('click', () => {
   renderVacationList();
@@ -729,6 +1104,285 @@ sdz.addEventListener('dragover', e => { e.preventDefault(); sdz.classList.add('d
 sdz.addEventListener('dragleave', () => sdz.classList.remove('drag'));
 sdz.addEventListener('drop', e => { e.preventDefault(); sdz.classList.remove('drag'); handleScheduleFile(e.dataTransfer.files[0]); });
 
+
+// ── CHAT COVERAGE ─────────────────────────────────────────────────────────────
+const CHAT_HOURS = [8,9,10,11,12,13,14,15,16,17,18,19]; // 8am-8pm (12 slots)
+const CHAT_MIN = 4;
+let chatAssignments = {}; // { agentName: Set of hours }
+let chatModalAgent = null;
+let chatAgentSearch = '';
+
+function loadChatAssignments() {
+  try {
+    const saved = localStorage.getItem('reds_chat');
+    if (saved) {
+      const raw = JSON.parse(saved);
+      chatAssignments = {};
+      for (const [k,v] of Object.entries(raw)) chatAssignments[k] = new Set(v);
+    }
+  } catch(e) {}
+}
+
+function saveChatAssignments() {
+  try {
+    const raw = {};
+    for (const [k,v] of Object.entries(chatAssignments)) raw[k] = [...v];
+    localStorage.setItem('reds_chat', JSON.stringify(raw));
+  } catch(e) {}
+  renderHourSlotPicker();
+  if (selectedHour !== null) renderAvailabilityPanel(selectedHour);
+}
+
+function fmtHour(h) {
+  if (h === 12) return '12p';
+  return h < 12 ? `${h}a` : `${h-12}p`;
+}
+
+function getShiftStartMins(name) {
+  // Derive start from shift string stored in SCHEDULE
+  const s = SCHEDULE[name];
+  if (!s || !s.shift) return 0;
+  const m = s.shift.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!m) return 0;
+  let h = parseInt(m[1]), min = parseInt(m[2]), ampm = m[3].toUpperCase();
+  if (ampm === 'PM' && h !== 12) h += 12;
+  if (ampm === 'AM' && h === 12) h = 0;
+  return h * 60 + min;
+}
+
+function agentWorksHour(name, hour) {
+  const s = SCHEDULE[name];
+  if (!s) return false;
+  if (s.endH === null) return true;
+  const startMins = getShiftStartMins(name);
+  const endMins = s.endH * 60 + s.endM;
+  // Agent covers this hour if their shift overlaps [hour:00, hour+1:00)
+  return startMins <= hour * 60 && endMins >= (hour + 1) * 60;
+}
+
+function renderChatTable() {
+  // Build hour header row
+  const hourHeaders = document.getElementById('chat-hour-headers');
+  hourHeaders.innerHTML = '<td style="padding:6px 14px;font-size:10px;color:var(--muted);font-weight:500;"></td><td style="padding:6px 14px;font-size:10px;color:var(--muted);font-weight:500;"></td>' +
+    CHAT_HOURS.map(h => `<td style="padding:6px 4px;font-size:10px;font-weight:500;color:var(--muted);text-align:center;border-left:1px solid var(--border);width:52px;">${fmtHour(h)}</td>`).join('');
+
+  const tbody = document.getElementById('chat-table-body');
+  const assigned = Object.keys(chatAssignments);
+
+  if (assigned.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="14" style="padding:2.5rem;text-align:center;color:var(--muted);font-size:13px;">No agents assigned to chat yet — click <strong>Assign agents</strong> to get started</td></tr>`;
+  } else {
+    tbody.innerHTML = assigned.map(name => {
+      const hours = chatAssignments[name] || new Set();
+      const cells = CHAT_HOURS.map(h => {
+        const works = agentWorksHour(name, h);
+        const on = hours.has(h);
+        const cls = !works ? 'covered-outside' : on ? 'covered' : 'uncovered';
+        const dot = !works ? '<div class="hour-dot" style="background:#e5e5ea;opacity:0.3;"></div>' : on ? '<div class="hour-dot on"></div>' : '<div class="hour-dot off"></div>';
+        return `<td class="hour-cell ${cls}" onclick="toggleChatHour('${name.replace(/'/g,"\\'")}',${h})" title="${works ? (on ? 'On chat' : 'Off chat') : 'Outside shift'}">${dot}</td>`;
+      }).join('');
+      return `<tr class="chat-agent-row">
+        <td style="padding:9px 14px;font-weight:500;font-size:13px;white-space:nowrap;">${name}</td>
+        <td style="padding:9px 14px;font-size:11px;color:var(--muted);white-space:nowrap;">${SCHEDULE[name]?.shift || '—'}</td>
+        ${cells}
+        </tr>`;
+    }).join('');
+  }
+
+  // Coverage footer
+  const footerRow = document.getElementById('chat-coverage-row');
+  const coverageCells = CHAT_HOURS.map(h => {
+    const count = Object.values(chatAssignments).filter(s => s.has(h)).length;
+    const cls = count === 0 ? 'empty' : count >= CHAT_MIN ? 'good' : 'low';
+    return `<td class="coverage-cell ${cls}">${count > 0 ? count : '—'}</td>`;
+  }).join('');
+  footerRow.innerHTML = `<td class="coverage-label">Coverage</td><td class="coverage-label" style="font-size:10px;color:var(--muted2);">min ${CHAT_MIN}</td>${coverageCells}`;
+}
+
+function toggleChatHour(name, hour) {
+  if (!chatAssignments[name]) return;
+  if (!agentWorksHour(name, hour)) return;
+  if (chatAssignments[name].has(hour)) chatAssignments[name].delete(hour);
+  else chatAssignments[name].add(hour);
+  saveChatAssignments();
+  renderChatTable();
+}
+
+// ── CHAT MODAL ────────────────────────────────────────────────────────────────
+function openChatModal() {
+  chatModalAgent = null;
+  chatAgentSearch = '';
+  document.getElementById('chat-agent-search').value = '';
+  document.getElementById('chat-hours-panel').style.display = 'none';
+  renderChatAgentList();
+  document.getElementById('chat-modal').classList.add('open');
+}
+
+function renderChatAgentList() {
+  const list = document.getElementById('chat-agent-list');
+  const day = getSelectedDay();
+
+  // Only show agents who are eligible for at least one chat hour
+  const agents = Object.keys(SCHEDULE)
+    .filter(n => {
+      const s = SCHEDULE[n];
+      if (!s?.days?.includes(day)) return false;
+      if (vacationSet.has(n)) return false;
+      // Must cover at least one chat hour
+      return CHAT_HOURS.some(h => agentWorksHour(n, h));
+    })
+    .filter(n => n.toLowerCase().includes(chatAgentSearch.toLowerCase()))
+    .sort();
+
+  if (!agents.length) {
+    list.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--muted);font-size:13px;">No eligible agents found</div>';
+    return;
+  }
+
+  // Group by shift
+  const groups = {};
+  agents.forEach(name => {
+    const shift = SCHEDULE[name]?.shift || '—';
+    if (!groups[shift]) groups[shift] = [];
+    groups[shift].push(name);
+  });
+
+  list.innerHTML = Object.entries(groups).map(([shift, names]) => {
+    const rows = names.map(name => {
+      const assigned = !!chatAssignments[name] && chatAssignments[name].size > 0;
+      const hrs = assigned ? chatAssignments[name].size : 0;
+      const eligibleCount = CHAT_HOURS.filter(h => agentWorksHour(name, h)).length;
+      const isSelected = chatModalAgent === name;
+      return `<div class="agent-list-item${isSelected ? ' on-vacation' : ''}" onclick="selectChatAgent('${name.replace(/'/g,"\\'")}')">
+        <div>
+          <div class="agent-list-name">${name}</div>
+          <div class="agent-list-shift">${eligibleCount}h eligible${assigned ? ' · <span style="color:var(--green);font-weight:500;">' + hrs + 'h assigned</span>' : ''}</div>
+        </div>
+        ${assigned
+          ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+          : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aeaeb2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>'}
+      </div>`;
+    }).join('');
+    return `<div style="border-top:1px solid var(--border);"><div style="padding:5px 10px 3px;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;background:var(--surface2);">${shift}</div>${rows}</div>`;
+  }).join('');
+}
+
+function selectChatAgent(name) {
+  chatModalAgent = name;
+  if (!chatAssignments[name]) chatAssignments[name] = new Set();
+  document.getElementById('chat-selected-name').textContent = name;
+  document.getElementById('chat-hours-panel').style.display = 'block';
+  renderChatHourToggles();
+  renderChatAgentList();
+}
+
+function fmtHourFull(h) {
+  if (h === 12) return '12:00 PM';
+  return h < 12 ? `${h}:00 AM` : `${h-12}:00 PM`;
+}
+
+function renderChatHourToggles() {
+  const container = document.getElementById('chat-hour-toggles');
+  if (!chatModalAgent) return;
+  const hours = chatAssignments[chatModalAgent] || new Set();
+  const eligible = CHAT_HOURS.filter(h => agentWorksHour(chatModalAgent, h));
+
+  // Quick-select presets
+  const presets = [
+    { label: 'All', hours: eligible },
+    { label: '8a–12p', hours: eligible.filter(h => h < 12) },
+    { label: '12p–4p', hours: eligible.filter(h => h >= 12 && h < 16) },
+    { label: '4p–8p', hours: eligible.filter(h => h >= 16) },
+  ].filter(p => p.hours.length > 0);
+
+  const presetsHTML = `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+    ${presets.map(p => `<button onclick="applyHourPreset(${JSON.stringify(p.hours)})"
+      style="padding:4px 10px;border-radius:999px;border:1px solid var(--border2);background:var(--surface2);
+      font-family:inherit;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer;transition:all 0.15s;"
+      onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'"
+      onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'"
+      >${p.label}</button>`).join('')}
+    <button onclick="clearAgentHours()"
+      style="padding:4px 10px;border-radius:999px;border:1px solid var(--border2);background:var(--surface2);
+      font-family:inherit;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer;margin-left:auto;"
+      onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'"
+      onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'"
+      >Clear</button>
+  </div>`;
+
+  const buttonsHTML = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">
+    ${CHAT_HOURS.map(h => {
+      const works = agentWorksHour(chatModalAgent, h);
+      const on = hours.has(h);
+      if (!works) return `<div style="padding:8px 4px;border-radius:var(--radius-sm);background:var(--surface2);
+        text-align:center;font-size:11px;color:var(--muted2);opacity:0.4;border:1px dashed var(--border);">
+        <div style="font-weight:500;">${fmtHour(h)}</div>
+        <div style="font-size:9px;margin-top:1px;">off shift</div>
+      </div>`;
+      return `<button onclick="toggleChatHourModal(${h})"
+        style="padding:8px 4px;border-radius:var(--radius-sm);border:1px solid ${on ? 'var(--green-border)' : 'var(--border)'};
+        background:${on ? 'var(--green-bg)' : 'var(--surface)'};cursor:pointer;font-family:inherit;
+        text-align:center;transition:all 0.15s;">
+        <div style="font-size:12px;font-weight:600;color:${on ? 'var(--green)' : 'var(--text)'};">${fmtHour(h)}</div>
+        <div style="font-size:9px;color:${on ? 'var(--green)' : 'var(--muted2)'};margin-top:1px;">${on ? 'on chat' : '—'}</div>
+      </button>`;
+    }).join('')}
+  </div>`;
+
+  container.innerHTML = presetsHTML + buttonsHTML;
+}
+
+function applyHourPreset(hours) {
+  if (!chatModalAgent) return;
+  if (!chatAssignments[chatModalAgent]) chatAssignments[chatModalAgent] = new Set();
+  hours.forEach(h => chatAssignments[chatModalAgent].add(h));
+  saveChatAssignments();
+  renderChatHourToggles();
+  renderChatAgentList();
+}
+
+function clearAgentHours() {
+  if (!chatModalAgent) return;
+  chatAssignments[chatModalAgent] = new Set();
+  saveChatAssignments();
+  renderChatHourToggles();
+  renderChatAgentList();
+}
+
+function toggleChatHourModal(h) {
+  if (!chatModalAgent) return;
+  if (!agentWorksHour(chatModalAgent, h)) return;
+  if (chatAssignments[chatModalAgent].has(h)) chatAssignments[chatModalAgent].delete(h);
+  else chatAssignments[chatModalAgent].add(h);
+  saveChatAssignments();
+  renderChatHourToggles();
+  renderChatAgentList();
+}
+
+document.getElementById('btn-assign-chat').addEventListener('click', openChatModal);
+document.getElementById('chat-modal-close').addEventListener('click', () => {
+  document.getElementById('chat-modal').classList.remove('open');
+  renderChatTable();
+});
+document.getElementById('chat-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('chat-modal')) {
+    document.getElementById('chat-modal').classList.remove('open');
+    renderChatTable();
+  }
+});
+document.getElementById('chat-agent-search').addEventListener('input', e => {
+  chatAgentSearch = e.target.value;
+  renderChatAgentList();
+});
+document.getElementById('btn-done-chat').addEventListener('click', () => {
+  if (chatAssignments[chatModalAgent]?.size === 0) delete chatAssignments[chatModalAgent];
+  document.getElementById('chat-modal').classList.remove('open');
+  saveChatAssignments();
+  renderChatTable();
+});
+document.getElementById('btn-clear-agent-chat').addEventListener('click', clearAgentHours);
+
+
 const now = new Date();
 document.getElementById('time-input').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 document.getElementById('day-input').value = now.getDay();
@@ -749,8 +1403,111 @@ try {
 } catch(e) {}
 
 updateScheduledStat();
+loadNameLinks();
 loadVacation();
 renderVacationBar();
+loadChatAssignments();
+renderChatTable();
+renderHourSlotPicker();
+// ── TIME SLOT PICKER & AVAILABILITY ──────────────────────────────────────────
+let selectedHour = null;
+
+function renderHourSlotPicker() {
+  const picker = document.getElementById('hour-slot-picker');
+  if (!picker) return;
+  picker.innerHTML = CHAT_HOURS.map(h => {
+    const count = Object.values(chatAssignments).filter(s => s.has(h)).length;
+    const isSelected = selectedHour === h;
+    const countClass = count === 0 ? '' : count >= CHAT_MIN ? 'good' : 'low';
+    const countLabel = count > 0 ? count + ' on chat' : '—';
+    return `<button class="slot-btn ${countClass} ${isSelected ? 'selected' : ''}" onclick="selectHourSlot(${h})">
+      ${fmtHour(h)}
+      <span class="slot-count">${countLabel}</span>
+    </button>`;
+  }).join('');
+}
+
+function selectHourSlot(h) {
+  selectedHour = selectedHour === h ? null : h;
+  renderHourSlotPicker();
+  if (selectedHour === null) {
+    document.getElementById('availability-panel').style.display = 'none';
+    return;
+  }
+  renderAvailabilityPanel(selectedHour);
+  document.getElementById('availability-panel').style.display = 'block';
+}
+
+function clearHourSelection() {
+  selectedHour = null;
+  renderHourSlotPicker();
+  document.getElementById('availability-panel').style.display = 'none';
+}
+
+function getAgentBandwidthAtHour(name, hour) {
+  // Returns free minutes remaining at that hour for this agent
+  const nowMins = hour * 60; // treat selected hour start as "now" for bandwidth calc
+  const s = SCHEDULE[name];
+  if (!s) return null;
+  if (s.endH === null) return 999; // overnight
+  const endMins = s.endH * 60 + s.endM;
+  const remaining = endMins - nowMins;
+  if (remaining <= 0) return null; // shift ended by this hour
+
+  // Get their reds
+  const agentData = currentData.find(d => d.scheduleName === name);
+  const reds = agentData ? agentData.reds : 0;
+  const redsTime = reds * 5;
+  return Math.max(0, remaining - redsTime);
+}
+
+function renderAvailabilityPanel(h) {
+  const day = getSelectedDay();
+  document.getElementById('avail-hour-label').textContent = `${fmtHourFull ? fmtHourFull(h) : fmtHour(h)} – ${fmtHour(h+1)}`;
+
+  // Get all agents scheduled today, not on vacation
+  const agents = Object.keys(SCHEDULE).filter(n => {
+    const s = SCHEDULE[n];
+    return s?.days?.includes(day) && !vacationSet.has(n);
+  });
+
+  const onChat = new Set(
+    Object.entries(chatAssignments)
+      .filter(([n, hrs]) => hrs.has(h))
+      .map(([n]) => n)
+  );
+
+  // Categorize each agent
+  const categorized = agents.map(name => {
+    const works = agentWorksHour(name, h);
+    if (!works) return { name, cat: 'off-shift', label: 'Off shift', freeMins: null, order: 5 };
+
+    const isOnChat = onChat.has(name);
+    const freeMins = getAgentBandwidthAtHour(name, h);
+
+    if (isOnChat) return { name, cat: 'on-chat', label: 'On chat', freeMins, order: 0 };
+    if (freeMins === null) return { name, cat: 'off-shift', label: 'Off shift', freeMins: null, order: 5 };
+    if (freeMins > 90) return { name, cat: 'has-bw', label: fmtMins(freeMins) + ' free', freeMins, order: 1 };
+    if (freeMins > 0) return { name, cat: 'low-bw', label: fmtMins(freeMins) + ' free', freeMins, order: 2 };
+    return { name, cat: 'no-bw', label: 'No bandwidth', freeMins: 0, order: 3 };
+  });
+
+  categorized.sort((a, b) => a.order - b.order || (b.freeMins ?? 0) - (a.freeMins ?? 0));
+
+  const onChatCount = categorized.filter(a => a.cat === 'on-chat').length;
+  const availCount = categorized.filter(a => a.cat === 'has-bw' || a.cat === 'low-bw').length;
+  const summaryColor = onChatCount >= CHAT_MIN ? 'var(--green)' : 'var(--red)';
+  document.getElementById('avail-summary').innerHTML =
+    `<span style="color:${summaryColor};font-weight:600;">${onChatCount} on chat</span> · ${availCount} available · ${categorized.filter(a=>a.cat==='off-shift').length} off shift`;
+
+  document.getElementById('availability-list').innerHTML = categorized.map(a => `
+    <div class="avail-card">
+      <div class="avail-dot ${a.cat}"></div>
+      <span class="avail-name">${a.name}</span>
+      <span class="avail-badge ${a.cat}">${a.label}</span>
+    </div>`).join('');
+}
+
 </script>
 </body>
 </html>
